@@ -1,1 +1,16 @@
-https://a3da6926ebb5a0.lhr.life
+<script>
+const API_URL = "https://a3da6926ebb5a0.lhr.life";
+
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await fetch(`${API_URL}/`, {
+            method: "GET"
+        });
+
+        const text = await response.text();
+        console.log("Termux connected:", text);
+    } catch (error) {
+        console.error("Cannot connect to Termux:", error);
+    }
+});
+</script>

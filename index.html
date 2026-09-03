@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Video Downloader by:Al Manalo</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .sites {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            background: #eee;
+        }
+
+        .youtube {
+            background: #ffe5e5;
+            color: #d60000;
+        }
+
+        .facebook {
+            background: #e5efff;
+            color: #1877f2;
+        }
+
+        .reels {
+            background: #f3e5ff;
+            color: #9b30ff;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1877f2;
+        }
+
+        .clear-btn {
+            border: none;
+            background: #eee;
+            border-radius: 12px;
+            padding: 0 15px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .download-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #1877f2;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .download-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .status-box {
+            display: none;
+            margin-top: 20px;
+            padding: 18px;
+            background: #f7f7f7;
+            border-radius: 14px;
+        }
+
+        .status-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #1877f2;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .details {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .result {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .save-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: #16a34a;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #ffe5e5;
+            color: #b00020;
+            border-radius: 12px;
+            word-break: break-word;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎬 Video Downloader</h1>
+
+    <div class="subtitle">
+        Download videos from YouTube and Facebook
+        by: Al Manalo
+    </div>
+
+    <div class="sites">
+        <span class="badge youtube">▶ YouTube</span>
+        <span class="badge facebook">f Facebook</span>
+        <span class="badge reels">▶ Reels</span>
+    </div>
+
+    <div class="input-row">
+        <input
+            type="url"
+            id="url"
+            placeholder="Paste YouTube or Facebook link..."
+            autocomplete="off"
+        >
+
+        <button
+            class="clear-btn"
+            onclick="clearInput()"
+            title="Clear"
+        >
+            ✕
+        </button>
+    </div>
+
+    <button
+        class="download-btn"
+        id="downloadBtn"
+        onclick="startDownload()"
+    >
+        ⬇️ Download Video
+    </button>
+
+
+    <!-- STATUS -->
+
+    <div class="status-box" id="statusBox">
+
+        <div class="status-title" id="statusTitle">
+            Preparing download...
+        </div>
+
+        <div class="progress-container">
+            <div
+                class="progress-bar"
+                id="progressBar"
+            ></div>
+        </div>
+
+        <div
+            class="progress-text"
+            id="progressText"
+        >
+            0%
+        </div>
+
+        <div class="details">
+
+            <div>
+                <strong>Status:</strong>
+                <span id="stage">Starting...</span>
+            </div>
+
+            <div>
+                <strong>Downloaded:</strong>
+                <span id="downloaded">--</span>
+            </div>
+
+            <div>
+                <strong>Total:</strong>
+                <span id="total">--</span>
+            </div>
+
+            <div>
+                <strong>Speed:</strong>
+                <span id="speed">--</span>
+            </div>
+
+            <div>
+                <strong>ETA:</strong>
+                <span id="eta">--</span>
+            </div>
+
+            <div>
+                <strong>Time:</strong>
+                <span id="elapsed">--</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        class="result"
+        id="result"
+    >
+
+        <div style="margin-bottom: 12px;">
+            ✅ Download complete!
+        </div>
+
+        <a
+            id="saveBtn"
+            class="save-btn"
+            href="#"
+        >
+            💾 Save Video
+        </a>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        class="error"
+        id="errorBox"
+    ></div>
+
+
+    <div class="footer">
+        Powered by yt-dlp + FFmpeg
+    </div>
+
+</div>
+
+
+<script>
+
+let currentJobId = null;
+let statusTimer = null;
+
+
+/* =========================
+   CLEAR
+========================= */
+
+function clearInput() {
+
+    document.getElementById("url").value = "";
+
+    hideStatus();
+    hideResult();
+    hideError();
+
+}
+
+
+/* =========================
+   START DOWNLOAD
+========================= */
+
+async function startDownload() {
+
+    const urlInput = document.getElementById("url");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    const url = urlInput.value.trim();
+
+    if (!url) {
+
+        showError("Please paste a YouTube or Facebook URL.");
+
+        return;
+    }
+
+
+    /*
+       Stop previous polling
+    */
+
+    if (statusTimer) {
+
+        clearTimeout(statusTimer);
+
+        statusTimer = null;
+    }
+
+
+    currentJobId = null;
+
+    hideResult();
+    hideError();
+
+    showStatus();
+
+    setProgress(0);
+
+    document.getElementById("statusTitle").textContent =
+        "Starting download...";
+
+    document.getElementById("stage").textContent =
+        "Preparing...";
+
+
+    downloadBtn.disabled = true;
+
+    downloadBtn.textContent =
+        "⏳ Starting...";
+
+
+    try {
+
+        const response = await fetch("/download", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                url: url
+            })
+
+        });
+
+
+        let data;
+
+        try {
+
+            data = await response.json();
+
+        } catch {
+
+            throw new Error(
+                "Server returned an invalid response."
+            );
+
+        }
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.error || "Could not start download."
+            );
+
+        }
+
+
+        /*
+           IMPORTANT:
+           The new app.py returns job_id.
+        */
+
+        if (!data.job_id) {
+
+            throw new Error(
+                "Server did not return a job ID."
+            );
+
+        }
+
+
+        currentJobId = data.job_id;
+
+        downloadBtn.textContent =
+            "⏳ Downloading...";
+
+
+        /*
+           Start checking progress
+        */
+
+        checkStatus();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            error.message || "Download failed."
+        );
+
+        downloadBtn.disabled = false;
+
+        downloadBtn.textContent =
+            "⬇️ Download Video";
+
+    }
+
+}
+
+
+/* =========================
+   CHECK STATUS
+========================= */
+
+async function checkStatus() {
+
+    if (!currentJobId) {
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "/status/" +
+            encodeURIComponent(currentJobId)
+        );
+
+
+        let data;
+
+        try {
+
+            data = await response.json();
+
+        } catch {
+
+            throw new Error(
+                "Invalid status response."
+            );
+
+        }
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.error ||
+                "Could not get download status."
+            );
+
+        }
+
+
+        /*
+           Update progress
+        */
+
+        updateStatus(data);
+
+
+        /*
+           COMPLETE
+        */
+
+        if (data.status === "complete") {
+
+            downloadComplete(data);
+
+            return;
+        }
+
+
+        /*
+           ERROR
+        */
+
+        if (data.status === "error") {
+
+            downloadFailed(
+                data.error ||
+                "Download failed."
+            );
+
+            return;
+        }
+
+
+        /*
+           Continue checking
+        */
+
+        statusTimer = setTimeout(
+            checkStatus,
+            700
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        /*
+           Retry temporary network errors
+        */
+
+        statusTimer = setTimeout(
+            checkStatus,
+            1500
+        );
+
+    }
+
+}
+
+
+/* =========================
+   UPDATE STATUS
+========================= */
+
+function updateStatus(data) {
+
+    let percent =
+        Number(data.percent);
+
+
+    if (!Number.isFinite(percent)) {
+
+        percent = 0;
+
+    }
+
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        );
+
+
+    setProgress(percent);
+
+
+    document.getElementById("statusTitle").textContent =
+        getStatusTitle(data.status);
+
+
+    document.getElementById("stage").textContent =
+        safeValue(
+            data.stage,
+            "Processing..."
+        );
+
+
+    document.getElementById("downloaded").textContent =
+        safeValue(
+            data.downloaded_text,
+            "--"
+        );
+
+
+    document.getElementById("total").textContent =
+        safeValue(
+            data.total_text,
+            "--"
+        );
+
+
+    document.getElementById("speed").textContent =
+        safeValue(
+            data.speed,
+            "--"
+        );
+
+
+    document.getElementById("eta").textContent =
+        safeValue(
+            data.eta,
+            "--"
+        );
+
+
+    document.getElementById("elapsed").textContent =
+        safeValue(
+            data.elapsed_text,
+            "--"
+        );
+
+
+    document.getElementById("downloadBtn").textContent =
+        "⏳ " + Math.round(percent) + "%";
+
+}
+
+
+/* =========================
+   STATUS TITLE
+========================= */
+
+function getStatusTitle(status) {
+
+    switch (status) {
+
+        case "starting":
+            return "Preparing download...";
+
+        case "downloading":
+            return "⬇️ Downloading video...";
+
+        case "processing":
+            return "⚙️ Processing video...";
+
+        case "merging":
+            return "🔄 Merging video and audio...";
+
+        case "complete":
+            return "✅ Download complete!";
+
+        case "error":
+            return "❌ Download failed.";
+
+        default:
+            return "⏳ Processing...";
+
+    }
+
+}
+
+
+/* =========================
+   COMPLETE
+========================= */
+
+function downloadComplete(data) {
+
+    setProgress(100);
+
+
+    document.getElementById("statusTitle").textContent =
+        "✅ Download complete!";
+
+
+    document.getElementById("stage").textContent =
+        "Finished";
+
+
+    const saveBtn =
+        document.getElementById("saveBtn");
+
+
+    /*
+       The new app.py provides file_url.
+    */
+
+    if (data.file_url) {
+
+        saveBtn.href =
+            data.file_url;
+
+    } else {
+
+        saveBtn.href =
+            "/file/" +
+            encodeURIComponent(currentJobId);
+
+    }
+
+
+    /*
+       Set filename when available
+    */
+
+    if (data.filename) {
+
+        saveBtn.download =
+            data.filename;
+
+    }
+
+
+    hideError();
+
+    document.getElementById("result").style.display =
+        "block";
+
+
+    const downloadBtn =
+        document.getElementById("downloadBtn");
+
+
+    downloadBtn.disabled = false;
+
+    downloadBtn.textContent =
+        "⬇️ Download Another";
+
+
+    /*
+       Keep the file available.
+       The server automatically cleans
+       old files after its cleanup period.
+    */
+
+}
+
+
+/* =========================
+   FAILED
+========================= */
+
+function downloadFailed(message) {
+
+    showError(message);
+
+    document.getElementById("downloadBtn").disabled =
+        false;
+
+    document.getElementById("downloadBtn").textContent =
+        "⬇️ Try Again";
+
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+function setProgress(percent) {
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(percent) || 0
+            )
+        );
+
+
+    document.getElementById("progressBar").style.width =
+        percent + "%";
+
+
+    document.getElementById("progressText").textContent =
+        Math.round(percent) + "%";
+
+}
+
+
+/* =========================
+   SAFE VALUE
+========================= */
+
+function safeValue(value, fallback) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return fallback;
+
+    }
+
+    return String(value);
+
+}
+
+
+/* =========================
+   SHOW / HIDE
+========================= */
+
+function showStatus() {
+
+    document.getElementById("statusBox").style.display =
+        "block";
+
+}
+
+
+function hideStatus() {
+
+    document.getElementById("statusBox").style.display =
+        "none";
+
+}
+
+
+function hideResult() {
+
+    document.getElementById("result").style.display =
+        "none";
+
+}
+
+
+function hideError() {
+
+    document.getElementById("errorBox").style.display =
+        "none";
+
+    document.getElementById("errorBox").textContent =
+        "";
+
+}
+
+
+function showError(message) {
+
+    const box =
+        document.getElementById("errorBox");
+
+    box.textContent =
+        "❌ " + message;
+
+    box.style.display =
+        "block";
+
+}
+
+
+/* =========================
+   ENTER KEY
+========================= */
+
+document
+    .getElementById("url")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                startDownload();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

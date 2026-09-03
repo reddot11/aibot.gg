@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Video Downloader by:Al Manalo</title>
+    <title>AI Bot</title>
 
     <style>
         * {
@@ -13,198 +14,110 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: #f2f4f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: #f5f5f5;
+            color: #222;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
         }
 
         h1 {
             text-align: center;
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 28px;
+            margin-bottom: 25px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
-        .sites {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .badge {
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            background: #eee;
-        }
-
-        .youtube {
-            background: #ffe5e5;
-            color: #d60000;
-        }
-
-        .facebook {
-            background: #e5efff;
-            color: #1877f2;
-        }
-
-        .reels {
-            background: #f3e5ff;
-            color: #9b30ff;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 8px;
-        }
-
+        textarea,
         input {
-            flex: 1;
-            min-width: 0;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 12px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #1877f2;
-        }
-
-        .clear-btn {
-            border: none;
-            background: #eee;
-            border-radius: 12px;
-            padding: 0 15px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .download-btn {
             width: 100%;
-            margin-top: 12px;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background: #1877f2;
-            color: white;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 8px;
+            margin-bottom: 10px;
         }
 
-        .download-btn:disabled {
-            background: #aaa;
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        button:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .status-box {
-            display: none;
-            margin-top: 20px;
-            padding: 18px;
-            background: #f7f7f7;
-            border-radius: 14px;
+        #status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #eee;
+            white-space: pre-wrap;
         }
 
-        .status-title {
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 20px;
-            background: #ddd;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: #1877f2;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            margin-top: 8px;
-            font-weight: bold;
-        }
-
-        .details {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #555;
-            line-height: 1.7;
-        }
-
-        .result {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .save-btn {
-            display: inline-block;
-            width: 100%;
+        #answer {
+            margin-top: 15px;
             padding: 15px;
-            background: #16a34a;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            min-height: 50px;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .online {
+            color: green;
+            font-weight: bold;
+        }
+
+        .offline {
+            color: red;
+            font-weight: bold;
+        }
+
+        a.download {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #222;
             color: white;
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 17px;
-        }
-
-        .error {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            background: #ffe5e5;
-            color: #b00020;
-            border-radius: 12px;
-            word-break: break-word;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-        }
-
-        @media (max-width: 500px) {
-            .container {
-                padding: 18px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
+            border-radius: 8px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -213,136 +126,87 @@
 
 <div class="container">
 
-    <h1>🎬 Video Downloader</h1>
+    <h1>🤖 AI Bot</h1>
 
-    <div class="subtitle">
-        Download videos from YouTube and Facebook
-        by: Al Manalo
-    </div>
+    <!-- CONNECTION -->
+    <div class="card">
 
-    <div class="sites">
-        <span class="badge youtube">▶ YouTube</span>
-        <span class="badge facebook">f Facebook</span>
-        <span class="badge reels">▶ Reels</span>
-    </div>
+        <h2>Server</h2>
 
-    <div class="input-row">
+        <p class="small">
+            GitHub Pages → Public API → Termux app.py
+        </p>
+
+        <!-- CHANGE THIS -->
         <input
+            id="apiUrl"
             type="url"
-            id="url"
-            placeholder="Paste YouTube or Facebook link..."
-            autocomplete="off"
+            placeholder="https://your-public-api-address"
         >
 
-        <button
-            class="clear-btn"
-            onclick="clearInput()"
-            title="Clear"
-        >
-            ✕
+        <button onclick="saveAPI()">
+            Save API Address
         </button>
+
+        <button onclick="testConnection()">
+            Test Termux Server
+        </button>
+
+        <div id="connectionStatus">
+            Not tested
+        </div>
+
     </div>
 
-    <button
-        class="download-btn"
-        id="downloadBtn"
-        onclick="startDownload()"
-    >
-        ⬇️ Download Video
-    </button>
 
+    <!-- AI CHAT -->
+    <div class="card">
 
-    <!-- STATUS -->
+        <h2>💬 AI Chat</h2>
 
-    <div class="status-box" id="statusBox">
+        <textarea
+            id="message"
+            placeholder="Type your message..."
+        ></textarea>
 
-        <div class="status-title" id="statusTitle">
-            Preparing download...
+        <button id="chatButton" onclick="sendMessage()">
+            Send
+        </button>
+
+        <div id="status">
+            Ready
         </div>
 
-        <div class="progress-container">
-            <div
-                class="progress-bar"
-                id="progressBar"
-            ></div>
-        </div>
+        <div id="answer"></div>
 
-        <div
-            class="progress-text"
-            id="progressText"
+    </div>
+
+
+    <!-- VIDEO DOWNLOADER -->
+    <div class="card">
+
+        <h2>📥 Video Downloader</h2>
+
+        <p class="small">
+            Paste a supported video URL.
+        </p>
+
+        <input
+            id="videoUrl"
+            type="url"
+            placeholder="Paste video URL here"
         >
-            0%
+
+        <button id="downloadButton" onclick="downloadVideo()">
+            Download
+        </button>
+
+        <div id="downloadStatus">
+            Ready
         </div>
 
-        <div class="details">
+        <div id="downloadResult"></div>
 
-            <div>
-                <strong>Status:</strong>
-                <span id="stage">Starting...</span>
-            </div>
-
-            <div>
-                <strong>Downloaded:</strong>
-                <span id="downloaded">--</span>
-            </div>
-
-            <div>
-                <strong>Total:</strong>
-                <span id="total">--</span>
-            </div>
-
-            <div>
-                <strong>Speed:</strong>
-                <span id="speed">--</span>
-            </div>
-
-            <div>
-                <strong>ETA:</strong>
-                <span id="eta">--</span>
-            </div>
-
-            <div>
-                <strong>Time:</strong>
-                <span id="elapsed">--</span>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- RESULT -->
-
-    <div
-        class="result"
-        id="result"
-    >
-
-        <div style="margin-bottom: 12px;">
-            ✅ Download complete!
-        </div>
-
-        <a
-            id="saveBtn"
-            class="save-btn"
-            href="#"
-        >
-            💾 Save Video
-        </a>
-
-    </div>
-
-
-    <!-- ERROR -->
-
-    <div
-        class="error"
-        id="errorBox"
-    ></div>
-
-
-    <div class="footer">
-        Powered by yt-dlp + FFmpeg
     </div>
 
 </div>
@@ -350,599 +214,346 @@
 
 <script>
 
-let currentJobId = null;
-let statusTimer = null;
+/*
+==================================================
+API CONFIGURATION
+==================================================
+
+IMPORTANT:
+
+Do NOT use:
+
+http://127.0.0.1:5000
+
+That means the visitor's own device.
+
+Your GitHub website needs a PUBLIC HTTPS address
+that forwards to your Termux app.py.
+
+Example:
+
+https://example.com
+
+or
+
+https://something.example
+
+*/
+
+let API_URL = localStorage.getItem("API_URL") || "";
 
 
-/* =========================
-   CLEAR
-========================= */
+/* Show saved API address */
 
-function clearInput() {
-
-    document.getElementById("url").value = "";
-
-    hideStatus();
-    hideResult();
-    hideError();
-
-}
+document.getElementById("apiUrl").value = API_URL;
 
 
-/* =========================
-   START DOWNLOAD
-========================= */
+/*
+==================================================
+SAVE API
+==================================================
+*/
 
-async function startDownload() {
+function saveAPI() {
 
-    const urlInput = document.getElementById("url");
-    const downloadBtn = document.getElementById("downloadBtn");
-
-    const url = urlInput.value.trim();
+    let url = document.getElementById("apiUrl").value.trim();
 
     if (!url) {
-
-        showError("Please paste a YouTube or Facebook URL.");
-
+        alert("Enter your public API address.");
         return;
     }
 
+    // Remove trailing slash
+    url = url.replace(/\/+$/, "");
 
-    /*
-       Stop previous polling
-    */
+    API_URL = url;
 
-    if (statusTimer) {
+    localStorage.setItem("API_URL", API_URL);
 
-        clearTimeout(statusTimer);
+    document.getElementById("apiUrl").value = API_URL;
 
-        statusTimer = null;
+    document.getElementById("connectionStatus").innerHTML =
+        '<span class="online">API address saved.</span>';
+}
+
+
+/*
+==================================================
+ CHECK API
+==================================================
+*/
+
+async function testConnection() {
+
+    if (!API_URL) {
+        alert("Enter and save your API address first.");
+        return;
     }
 
+    const status =
+        document.getElementById("connectionStatus");
 
-    currentJobId = null;
-
-    hideResult();
-    hideError();
-
-    showStatus();
-
-    setProgress(0);
-
-    document.getElementById("statusTitle").textContent =
-        "Starting download...";
-
-    document.getElementById("stage").textContent =
-        "Preparing...";
-
-
-    downloadBtn.disabled = true;
-
-    downloadBtn.textContent =
-        "⏳ Starting...";
-
+    status.innerHTML = "Connecting...";
 
     try {
 
-        const response = await fetch("/download", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                url: url
-            })
-
-        });
-
-
-        let data;
-
-        try {
-
-            data = await response.json();
-
-        } catch {
-
-            throw new Error(
-                "Server returned an invalid response."
-            );
-
-        }
-
-
-        if (!response.ok || !data.success) {
-
-            throw new Error(
-                data.error || "Could not start download."
-            );
-
-        }
-
-
         /*
-           IMPORTANT:
-           The new app.py returns job_id.
+        Your Flask app should ideally have:
+
+        GET /
+        or
+        GET /api/health
+
+        We try /api/health first.
         */
 
-        if (!data.job_id) {
+        const response = await fetch(
+            `${API_URL}/api/health`,
+            {
+                method: "GET"
+            }
+        );
 
+        if (!response.ok) {
             throw new Error(
-                "Server did not return a job ID."
+                `HTTP ${response.status}`
             );
-
         }
 
+        const data = await response.text();
 
-        currentJobId = data.job_id;
-
-        downloadBtn.textContent =
-            "⏳ Downloading...";
-
-
-        /*
-           Start checking progress
-        */
-
-        checkStatus();
-
+        status.innerHTML =
+            `<span class="online">✓ Termux server is online</span>\n${data}`;
 
     } catch (error) {
 
         console.error(error);
 
-        showError(
-            error.message || "Download failed."
-        );
-
-        downloadBtn.disabled = false;
-
-        downloadBtn.textContent =
-            "⬇️ Download Video";
-
+        status.innerHTML =
+            `<span class="offline">✗ Connection failed</span>\n${error.message}`;
     }
-
 }
 
 
-/* =========================
-   CHECK STATUS
-========================= */
+/*
+==================================================
+ AI CHAT
+==================================================
+*/
 
-async function checkStatus() {
+async function sendMessage() {
 
-    if (!currentJobId) {
+    if (!API_URL) {
+        alert("Save your API address first.");
         return;
     }
 
+    const message =
+        document.getElementById("message").value.trim();
+
+    if (!message) {
+        alert("Type a message.");
+        return;
+    }
+
+    const button =
+        document.getElementById("chatButton");
+
+    const status =
+        document.getElementById("status");
+
+    const answer =
+        document.getElementById("answer");
+
+    button.disabled = true;
+
+    status.textContent = "Thinking...";
+
+    answer.textContent = "";
 
     try {
 
         const response = await fetch(
-            "/status/" +
-            encodeURIComponent(currentJobId)
+            `${API_URL}/api/chat`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+            }
         );
 
+        const data = await response.json();
 
-        let data;
-
-        try {
-
-            data = await response.json();
-
-        } catch {
-
+        if (!response.ok) {
             throw new Error(
-                "Invalid status response."
+                data.error || `HTTP ${response.status}`
             );
-
         }
 
-
-        if (!response.ok || !data.success) {
-
-            throw new Error(
-                data.error ||
-                "Could not get download status."
-            );
-
-        }
-
-
         /*
-           Update progress
+        Supports several common Flask responses:
+
+        {"response":"Hello"}
+        {"answer":"Hello"}
+        {"message":"Hello"}
         */
 
-        updateStatus(data);
+        const text =
+            data.response ??
+            data.answer ??
+            data.message ??
+            JSON.stringify(data);
 
+        answer.textContent = text;
 
-        /*
-           COMPLETE
-        */
-
-        if (data.status === "complete") {
-
-            downloadComplete(data);
-
-            return;
-        }
-
-
-        /*
-           ERROR
-        */
-
-        if (data.status === "error") {
-
-            downloadFailed(
-                data.error ||
-                "Download failed."
-            );
-
-            return;
-        }
-
-
-        /*
-           Continue checking
-        */
-
-        statusTimer = setTimeout(
-            checkStatus,
-            700
-        );
-
+        status.textContent = "Done";
 
     } catch (error) {
 
         console.error(error);
 
+        status.textContent =
+            "Error: " + error.message;
+
+        answer.textContent =
+            "Could not connect to the Termux AI server.";
+    }
+
+    button.disabled = false;
+}
+
+
+/*
+==================================================
+ VIDEO DOWNLOAD
+==================================================
+*/
+
+async function downloadVideo() {
+
+    if (!API_URL) {
+        alert("Save your API address first.");
+        return;
+    }
+
+    const url =
+        document.getElementById("videoUrl")
+        .value.trim();
+
+    if (!url) {
+        alert("Paste a video URL.");
+        return;
+    }
+
+    const button =
+        document.getElementById("downloadButton");
+
+    const status =
+        document.getElementById("downloadStatus");
+
+    const result =
+        document.getElementById("downloadResult");
+
+    button.disabled = true;
+
+    status.textContent =
+        "Starting download...";
+
+    result.innerHTML = "";
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/download`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    url: url
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || `HTTP ${response.status}`
+            );
+        }
+
+        status.textContent =
+            "Download ready!";
+
         /*
-           Retry temporary network errors
+        Your Flask API can return:
+
+        {
+            "download_url":
+            "https://..."
+        }
         */
 
-        statusTimer = setTimeout(
-            checkStatus,
-            1500
-        );
+        if (data.download_url) {
 
+            result.innerHTML = `
+                <a
+                    class="download"
+                    href="${data.download_url}"
+                    download
+                >
+                    📥 Download File
+                </a>
+            `;
+
+        } else {
+
+            result.textContent =
+                JSON.stringify(data, null, 2);
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Download error: " + error.message;
     }
 
+    button.disabled = false;
 }
 
 
-/* =========================
-   UPDATE STATUS
-========================= */
-
-function updateStatus(data) {
-
-    let percent =
-        Number(data.percent);
-
-
-    if (!Number.isFinite(percent)) {
-
-        percent = 0;
-
-    }
-
-
-    percent =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                percent
-            )
-        );
-
-
-    setProgress(percent);
-
-
-    document.getElementById("statusTitle").textContent =
-        getStatusTitle(data.status);
-
-
-    document.getElementById("stage").textContent =
-        safeValue(
-            data.stage,
-            "Processing..."
-        );
-
-
-    document.getElementById("downloaded").textContent =
-        safeValue(
-            data.downloaded_text,
-            "--"
-        );
-
-
-    document.getElementById("total").textContent =
-        safeValue(
-            data.total_text,
-            "--"
-        );
-
-
-    document.getElementById("speed").textContent =
-        safeValue(
-            data.speed,
-            "--"
-        );
-
-
-    document.getElementById("eta").textContent =
-        safeValue(
-            data.eta,
-            "--"
-        );
-
-
-    document.getElementById("elapsed").textContent =
-        safeValue(
-            data.elapsed_text,
-            "--"
-        );
-
-
-    document.getElementById("downloadBtn").textContent =
-        "⏳ " + Math.round(percent) + "%";
-
-}
-
-
-/* =========================
-   STATUS TITLE
-========================= */
-
-function getStatusTitle(status) {
-
-    switch (status) {
-
-        case "starting":
-            return "Preparing download...";
-
-        case "downloading":
-            return "⬇️ Downloading video...";
-
-        case "processing":
-            return "⚙️ Processing video...";
-
-        case "merging":
-            return "🔄 Merging video and audio...";
-
-        case "complete":
-            return "✅ Download complete!";
-
-        case "error":
-            return "❌ Download failed.";
-
-        default:
-            return "⏳ Processing...";
-
-    }
-
-}
-
-
-/* =========================
-   COMPLETE
-========================= */
-
-function downloadComplete(data) {
-
-    setProgress(100);
-
-
-    document.getElementById("statusTitle").textContent =
-        "✅ Download complete!";
-
-
-    document.getElementById("stage").textContent =
-        "Finished";
-
-
-    const saveBtn =
-        document.getElementById("saveBtn");
-
-
-    /*
-       The new app.py provides file_url.
-    */
-
-    if (data.file_url) {
-
-        saveBtn.href =
-            data.file_url;
-
-    } else {
-
-        saveBtn.href =
-            "/file/" +
-            encodeURIComponent(currentJobId);
-
-    }
-
-
-    /*
-       Set filename when available
-    */
-
-    if (data.filename) {
-
-        saveBtn.download =
-            data.filename;
-
-    }
-
-
-    hideError();
-
-    document.getElementById("result").style.display =
-        "block";
-
-
-    const downloadBtn =
-        document.getElementById("downloadBtn");
-
-
-    downloadBtn.disabled = false;
-
-    downloadBtn.textContent =
-        "⬇️ Download Another";
-
-
-    /*
-       Keep the file available.
-       The server automatically cleans
-       old files after its cleanup period.
-    */
-
-}
-
-
-/* =========================
-   FAILED
-========================= */
-
-function downloadFailed(message) {
-
-    showError(message);
-
-    document.getElementById("downloadBtn").disabled =
-        false;
-
-    document.getElementById("downloadBtn").textContent =
-        "⬇️ Try Again";
-
-}
-
-
-/* =========================
-   PROGRESS
-========================= */
-
-function setProgress(percent) {
-
-    percent =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                Number(percent) || 0
-            )
-        );
-
-
-    document.getElementById("progressBar").style.width =
-        percent + "%";
-
-
-    document.getElementById("progressText").textContent =
-        Math.round(percent) + "%";
-
-}
-
-
-/* =========================
-   SAFE VALUE
-========================= */
-
-function safeValue(value, fallback) {
-
-    if (
-        value === undefined ||
-        value === null ||
-        value === ""
-    ) {
-
-        return fallback;
-
-    }
-
-    return String(value);
-
-}
-
-
-/* =========================
-   SHOW / HIDE
-========================= */
-
-function showStatus() {
-
-    document.getElementById("statusBox").style.display =
-        "block";
-
-}
-
-
-function hideStatus() {
-
-    document.getElementById("statusBox").style.display =
-        "none";
-
-}
-
-
-function hideResult() {
-
-    document.getElementById("result").style.display =
-        "none";
-
-}
-
-
-function hideError() {
-
-    document.getElementById("errorBox").style.display =
-        "none";
-
-    document.getElementById("errorBox").textContent =
-        "";
-
-}
-
-
-function showError(message) {
-
-    const box =
-        document.getElementById("errorBox");
-
-    box.textContent =
-        "❌ " + message;
-
-    box.style.display =
-        "block";
-
-}
-
-
-/* =========================
-   ENTER KEY
-========================= */
+/*
+==================================================
+ ENTER KEY
+==================================================
+*/
 
 document
-    .getElementById("url")
-    .addEventListener(
-        "keydown",
-        function(event) {
+    .getElementById("message")
+    .addEventListener("keydown", function(event) {
 
-            if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
 
-                startDownload();
+            event.preventDefault();
 
-            }
-
+            sendMessage();
         }
-    );
+    });
 
 </script>
 
 </body>
 </html>
+```

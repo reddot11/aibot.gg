@@ -1,16 +1,904 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Bot - YouTube & Facebook Downloader</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f4f7;
+            color: #222;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 0;
+            opacity: .8;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #374151;
+            font-size: 14px;
+        }
+
+        .online {
+            color: #22c55e;
+        }
+
+        .offline {
+            color: #ef4444;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .secondary {
+            background: #4b5563;
+        }
+
+        .success {
+            background: #16a34a;
+        }
+
+        .danger {
+            background: #dc2626;
+        }
+
+        .chat-box {
+            height: 350px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+            background: #f9fafb;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            max-width: 90%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background: #dbeafe;
+            margin-left: auto;
+        }
+
+        .bot {
+            background: #e5e7eb;
+            margin-right: auto;
+        }
+
+        .thinking {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            transition: width .3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: none;
+        }
+
+        .download-link {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #16a34a;
+            color: white;
+            padding: 13px;
+            border-radius: 9px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .chat-box {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>🤖 AI Bot</h1>
+        <p>AI Chat • YouTube Shorts • Facebook Reels</p>
+
+        <div class="status" id="connectionStatus">
+            🔄 Connecting to Termux...
+        </div>
+    </header>
+
+
+    <!-- AI CHAT -->
+    <div class="card">
+
+        <h2>💬 AI Chat</h2>
+
+        <div id="chatBox" class="chat-box">
+            <div class="message bot">
+                Hello! 👋 I'm your AI assistant.
+            </div>
+        </div>
+
+        <textarea
+            id="chatInput"
+            rows="3"
+            placeholder="Ask the AI something..."
+        ></textarea>
+
+        <button id="sendButton" onclick="sendChat()">
+            Send
+        </button>
+
+    </div>
+
+
+    <!-- VIDEO DOWNLOADER -->
+    <div class="card">
+
+        <h2>⬇️ Video Downloader</h2>
+
+        <p class="small">
+            Paste a YouTube, YouTube Shorts, Facebook Reel or Facebook video URL.
+        </p>
+
+        <input
+            type="url"
+            id="videoUrl"
+            placeholder="https://youtube.com/... or https://facebook.com/..."
+        >
+
+        <select id="format">
+            <option value="mp4">MP4 Video</option>
+            <option value="mp3">MP3 Audio</option>
+        </select>
+
+        <button id="downloadButton" onclick="downloadVideo()">
+            Download Video
+        </button>
+
+
+        <div class="progress-container" id="progressContainer">
+
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+
+            <div class="progress-text" id="progressText">
+                Starting...
+            </div>
+
+        </div>
+
+
+        <div class="result" id="downloadResult"></div>
+
+    </div>
+
+
+    <!-- CONNECTION TEST -->
+    <div class="card">
+
+        <h2>🔌 Server Connection</h2>
+
+        <p class="small">
+            Termux Flask server:
+        </p>
+
+        <input
+            type="text"
+            id="apiDisplay"
+            readonly
+        >
+
+        <button class="secondary" onclick="checkConnection()">
+            Test Connection
+        </button>
+
+    </div>
+
+
+    <footer>
+        AI Bot running through GitHub Pages + Termux
+    </footer>
+
+</div>
+
+
 <script>
-const API_URL = "https://a3da6926ebb5a0.lhr.life";
 
-window.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const response = await fetch(`${API_URL}/`, {
-            method: "GET"
-        });
+    /*
+     * =========================================================
+     * TERMUX API URL
+     * =========================================================
+     */
 
-        const text = await response.text();
-        console.log("Termux connected:", text);
-    } catch (error) {
-        console.error("Cannot connect to Termux:", error);
+    const API_URL = "https://a3da6926ebb5a0.lhr.life";
+
+
+    /*
+     * Show API URL
+     */
+
+    document.getElementById("apiDisplay").value = API_URL;
+
+
+    /*
+     * =========================================================
+     * CONNECTION TEST
+     * =========================================================
+     */
+
+    async function checkConnection() {
+
+        const status =
+            document.getElementById("connectionStatus");
+
+        status.innerHTML = "🔄 Connecting...";
+
+        status.className = "status";
+
+        try {
+
+            const response = await fetch(
+                API_URL + "/",
+                {
+                    method: "GET",
+                    cache: "no-cache"
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "HTTP " + response.status
+                );
+            }
+
+            const text = await response.text();
+
+            console.log(
+                "Termux response:",
+                text
+            );
+
+            status.innerHTML =
+                "🟢 Termux is ONLINE";
+
+            status.className =
+                "status online";
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.innerHTML =
+                "🔴 Termux is OFFLINE";
+
+            status.className =
+                "status offline";
+        }
     }
-});
+
+
+    /*
+     * Automatically test connection
+     * when GitHub page loads
+     */
+
+    window.addEventListener(
+        "DOMContentLoaded",
+        function() {
+            checkConnection();
+        }
+    );
+
+
+    /*
+     * =========================================================
+     * AI CHAT
+     * =========================================================
+     */
+
+    async function sendChat() {
+
+        const input =
+            document.getElementById("chatInput");
+
+        const button =
+            document.getElementById("sendButton");
+
+        const chatBox =
+            document.getElementById("chatBox");
+
+        const message =
+            input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+
+        /*
+         * Show user message
+         */
+
+        const userMessage =
+            document.createElement("div");
+
+        userMessage.className =
+            "message user";
+
+        userMessage.textContent =
+            message;
+
+        chatBox.appendChild(
+            userMessage
+        );
+
+
+        input.value = "";
+
+        button.disabled = true;
+
+
+        /*
+         * Thinking message
+         */
+
+        const thinking =
+            document.createElement("div");
+
+        thinking.className =
+            "message bot thinking";
+
+        thinking.textContent =
+            "🤔 Thinking...";
+
+        chatBox.appendChild(
+            thinking
+        );
+
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/api/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message: message
+                        })
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " +
+                    response.status
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            thinking.remove();
+
+
+            const botMessage =
+                document.createElement("div");
+
+            botMessage.className =
+                "message bot";
+
+
+            /*
+             * Support different Flask response names
+             */
+
+            botMessage.textContent =
+                data.response ||
+                data.reply ||
+                data.message ||
+                data.text ||
+                "No response received.";
+
+
+            chatBox.appendChild(
+                botMessage
+            );
+
+
+        } catch (error) {
+
+            thinking.remove();
+
+            const errorMessage =
+                document.createElement("div");
+
+            errorMessage.className =
+                "message bot";
+
+            errorMessage.textContent =
+                "❌ AI connection error:\n" +
+                error.message;
+
+            chatBox.appendChild(
+                errorMessage
+            );
+
+            console.error(
+                "Chat error:",
+                error
+            );
+
+        } finally {
+
+            button.disabled = false;
+
+            chatBox.scrollTop =
+                chatBox.scrollHeight;
+        }
+    }
+
+
+    /*
+     * Allow Enter to send chat
+     *
+     * Shift + Enter = new line
+     */
+
+    document
+        .getElementById("chatInput")
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
+
+                    event.preventDefault();
+
+                    sendChat();
+                }
+            }
+        );
+
+
+    /*
+     * =========================================================
+     * VIDEO DOWNLOADER
+     * =========================================================
+     */
+
+    async function downloadVideo() {
+
+        const url =
+            document
+                .getElementById("videoUrl")
+                .value
+                .trim();
+
+        const format =
+            document
+                .getElementById("format")
+                .value;
+
+        const button =
+            document
+                .getElementById("downloadButton");
+
+        const progressContainer =
+            document
+                .getElementById("progressContainer");
+
+        const progressBar =
+            document
+                .getElementById("progressBar");
+
+        const progressText =
+            document
+                .getElementById("progressText");
+
+        const result =
+            document
+                .getElementById("downloadResult");
+
+
+        if (!url) {
+
+            alert(
+                "Please enter a video URL."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Reset UI
+         */
+
+        button.disabled = true;
+
+        button.textContent =
+            "Downloading...";
+
+        progressContainer.style.display =
+            "block";
+
+        result.style.display =
+            "none";
+
+        result.innerHTML = "";
+
+        progressBar.style.width =
+            "0%";
+
+        progressText.textContent =
+            "Starting download...";
+
+
+        /*
+         * Fake visual progress while
+         * server is processing
+         */
+
+        let progress = 5;
+
+        const progressTimer =
+            setInterval(
+                function() {
+
+                    if (progress < 90) {
+
+                        progress +=
+                            Math.random() * 5;
+
+                        if (progress > 90) {
+                            progress = 90;
+                        }
+
+                        progressBar.style.width =
+                            progress + "%";
+
+                        progressText.textContent =
+                            "Downloading... " +
+                            Math.floor(progress) +
+                            "%";
+                    }
+
+                },
+                500
+            );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/api/download",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            url: url,
+                            format: format
+                        })
+                    }
+                );
+
+
+            clearInterval(
+                progressTimer
+            );
+
+
+            if (!response.ok) {
+
+                let errorText =
+                    "Download failed.";
+
+                try {
+
+                    const errorData =
+                        await response.json();
+
+                    errorText =
+                        errorData.error ||
+                        errorData.message ||
+                        errorText;
+
+                } catch(e) {}
+
+                throw new Error(
+                    errorText
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            /*
+             * Complete progress
+             */
+
+            progressBar.style.width =
+                "100%";
+
+            progressText.textContent =
+                "✅ Download ready!";
+
+
+            /*
+             * Get download URL
+             */
+
+            let downloadUrl =
+                data.download_url ||
+                data.url ||
+                data.file;
+
+
+            if (!downloadUrl) {
+
+                throw new Error(
+                    "Server did not return a download URL."
+                );
+            }
+
+
+            /*
+             * If Flask returns a relative URL,
+             * attach the Termux API URL.
+             */
+
+            if (
+                downloadUrl.startsWith("/")
+            ) {
+
+                downloadUrl =
+                    API_URL +
+                    downloadUrl;
+            }
+
+
+            result.style.display =
+                "block";
+
+
+            result.innerHTML = `
+                <strong>✅ Video ready!</strong>
+
+                <a
+                    class="download-link"
+                    href="${downloadUrl}"
+                    target="_blank"
+                    download
+                >
+                    ⬇️ Download File
+                </a>
+            `;
+
+
+        } catch (error) {
+
+            clearInterval(
+                progressTimer
+            );
+
+            progressBar.style.width =
+                "0%";
+
+            progressText.textContent =
+                "❌ Download failed";
+
+
+            result.style.display =
+                "block";
+
+
+            result.innerHTML =
+                "❌ " +
+                escapeHtml(
+                    error.message
+                );
+
+
+            console.error(
+                "Download error:",
+                error
+            );
+
+        } finally {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Download Video";
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * HTML ESCAPE
+     * =========================================================
+     */
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+    }
+
 </script>
+
+</body>
+</html>
+```
